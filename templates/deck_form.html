@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head><title>{{ 'Edit' if deck else 'New' }} Deck</title></head>
+<body>
+    <h1>{{ 'Edit' if deck else 'New' }} Deck</h1>
+    <form method="POST">
+        <input type="text" name="name" placeholder="Deck name" value="{{ deck.name if deck else '' }}" required>
+        <button type="submit">Save</button>
+    </form>
+    <a href="{{ url_for('index') }}">Back</a>
+</body>
+</html>
