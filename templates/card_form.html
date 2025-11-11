@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head><title>{{ 'Edit' if card else 'New' }} Card</title></head>
+<body>
+    <h1>{{ 'Edit' if card else 'New' }} Card for "{{ deck.name }}"</h1>
+    <form method="POST">
+        <label>Front:</label><br>
+        <textarea name="front_text" required>{{ card.front_text if card else '' }}</textarea><br>
+        <label>Back:</label><br>
+        <textarea name="back_text" required>{{ card.back_text if card else '' }}</textarea><br>
+        <button type="submit">Save</button>
+    </form>
+    <a href="{{ url_for('deck_detail', deck_id=deck.id) }}">Back to Deck</a>
+</body>
+</html>
