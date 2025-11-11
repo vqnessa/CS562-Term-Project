@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
-<head><title>{{ 'Edit' if card else 'New' }} Card</title></head>
+<head>
+    <title>{{ 'Edit' if card else 'New' }} Card</title>
+</head>
 <body>
     <h1>{{ 'Edit' if card else 'New' }} Card for "{{ deck.name }}"</h1>
     <form method="POST">

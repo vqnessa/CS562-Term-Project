@@ -17,8 +17,10 @@ def create_sample_data():
         test1_deck = Deck.query.filter_by(name="Test1").first()
 
         sample_cards = [
-            Card(deck_id=test1_deck.id, front_text="Front1", back_text="Back1", order_index=1),
-            Card(deck_id=test1_deck.id, front_text="Front2", back_text="Back2", order_index=2),
+            Card(deck_id=test1_deck.id, front_text="Front1",
+                 back_text="Back1", order_index=1),
+            Card(deck_id=test1_deck.id, front_text="Front2",
+                 back_text="Back2", order_index=2),
         ]
         db.session.add_all(sample_cards)
         db.session.commit()
