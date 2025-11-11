@@ -7,14 +7,24 @@
     <p>Updated: {{ deck.updated_at.strftime('%Y-%m-%d') }}</p>
 
     <h2>Cards</h2>
+    <a href="{{ url_for('create_card', deck_id=deck.id) }}">Add Card</a>
     <ul>
-        {% for card in deck.cards %}
-        <li>{{ card.front_text }} -> {{ card.back_text }}</li>
+        {% for card in deck.cards|sort(attribute='order_index') %}
+        <li>
+            <strong>{{ card.front_text }}</strong> → {{ card.back_text }}
+            <form action="{{ url_for('edit_card', deck_id=deck.id, card_id=card.id) }}" method="get" style="display:inline;">
+                <button type="submit">Edit</button>
+            </form>
+            <form action="{{ url_for('delete_card', deck_id=deck.id, card_id=card.id) }}" method="post" style="display:inline;">
+                <button type="submit">Delete</button>
+            </form>
+        </li>
         {% else %}
         <li>No cards yet.</li>
         {% endfor %}
     </ul>
 
+    <hr>
     <a href="{{ url_for('edit_deck', deck_id=deck.id) }}">Edit Deck</a>
     <a href="{{ url_for('index') }}">Back to all decks</a>
 </body>
