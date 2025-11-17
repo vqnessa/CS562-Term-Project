@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Study Complete</title>
+</head>
+<body>
+    {% if deck.cards|length > 0 %}
+    <h2>Nice! You've studied all the terms in {{ deck.name }}.</h2>
+    <p>Try another round for more practice.</p>
+    <p>
+        <a href="{{ url_for('study_deck', deck_id=deck.id) }}">Study Again</a> |
+        <a href="{{ url_for('deck_detail', deck_id=deck.id) }}">Back to Deck</a>
+    </p>
+    {% else %}
+    <h1>No cards in Deck</h1>
+    <p>The deck <strong>{{ deck.name }}</strong> has no cards yet.</p>
+    <p>
+        <a href="{{ url_for('create_card', deck_id=deck.id) }}">Add Card</a> |
+        <a href="{{ url_for('deck_detail', deck_id=deck.id) }}">Back to Deck</a>
+    </p>
+    {% endif %}
+</body>
+</html>
