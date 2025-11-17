@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Study: {{ deck.name }}</title>
+</head>
+<body>
+    <h1>Studying: {{ deck.name }}</h1>
+
+    <div class="card">
+        {% if show_back %}
+        {{ card.back_text }}
+        {% else %}
+        {{ card.front_text }}
+        {% endif %}
+    </div>
+
+    <div class="controls">
+        {% if not show_back %}
+        <a href="{{ url_for('study_deck', deck_id=deck.id, index=current_index, show='true', shuffle=shuffle_enabled) }}">
+            <button>Click to show answer</button>
+        </a>
+        {% endif %}
+        <p>
+        {% if current_index != 0 %}
+            <a class="button" href="{{ url_for('study_deck', deck_id=deck.id, index=current_index - 1, shuffle=shuffle_enabled) }}">Previous Card</a>
+        {% endif %}
+            <a class="button" href="{{ url_for('study_deck', deck_id=deck.id, index=current_index + 1, shuffle=shuffle_enabled) }}">Next Card</a>
+        </p>
+    </div>
+
+    <div style="margin-top:20px;">
+        {% if shuffle_enabled %}
+        <a href="{{ url_for('study_deck', deck_id=deck.id, index=current_index, shuffle='false') }}">
+            <button>Shuffle</button>
+        </a>
+        {% else %}
+        <a href="{{ url_for('study_deck', deck_id=deck.id, index=current_index, shuffle='true') }}">
+            <button>Shuffle</button>
+        </a>
+        {% endif %}
+    </div>
+
+    <p style="margin-top:15px;">
+        <a href="{{ url_for('deck_detail', deck_id=deck.id) }}">Back to Deck</a>
+    </p>
+</body>
+</html>
