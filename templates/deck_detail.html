@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
-<head><title>{{ deck.name }}</title></head>
+<head>
+    <title>{{ deck.name }}</title>
+</head>
 <body>
     <h1>{{ deck.name }}</h1>
     <p>Created: {{ deck.created_at.strftime('%Y-%m-%d') }}</p>
@@ -8,6 +10,7 @@
 
     <h2>Cards</h2>
     <a href="{{ url_for('create_card', deck_id=deck.id) }}">Add Card</a>
+    <a href="{{ url_for('study_deck', deck_id=deck.id) }}">Study</a>
     <ul>
         {% for card in deck.cards|sort(attribute='order_index') %}
         <li>

@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from config import Config
+from random import shuffle
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -30,7 +31,8 @@ def create_deck():
     if request.method == 'POST':
         new_deck = Deck(name=request.form['name'])
         db.session.add(new_deck)
-        return commit_and_redirect('index')
+        db.session.commit()
+        return redirect(url_for('deck_detail', deck_id=new_deck.id))
     return render_template('deck_form.html')
 
 @app.route('/deck/<int:deck_id>/edit', methods=['GET', 'POST'])
@@ -81,3 +83,36 @@ def edit_card(deck_id, card_id):
 def delete_card(deck_id, card_id):
     db.session.delete(get_card(card_id))
     return commit_and_redirect('deck_detail', deck_id=deck_id)
+
+# Study mode
+@app.route('/deck/<int:deck_id>/study', methods=['GET', 'POST'])
+def study_deck(deck_id):
+    deck = get_deck(deck_id)
+    cards = list(deck.cards)
+
+    if not cards:
+        return render_template('study_complete.html', deck=deck)
+
+    shuffle_enabled = request.args.get('shuffle', 'false').lower() == 'true'
+
+    # Only shuffle if user has shuffle mode enabled
+    if shuffle_enabled:
+        shuffle(cards)
+
+    current_index = int(request.args.get('index', 0))
+    show_back = request.args.get('show', 'false').lower() == 'true'
+
+    if current_index >= len(cards):
+        return render_template('study_complete.html', deck=deck, shuffle_enabled=shuffle_enabled)
+
+    card = cards[current_index]
+
+    return render_template(
+        'study.html',
+        deck=deck,
+        card=card,
+        current_index=current_index,
+        total=len(cards),
+        show_back=show_back,
+        shuffle_enabled=shuffle_enabled
+    )
