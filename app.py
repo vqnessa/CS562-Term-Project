@@ -1,7 +1,7 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session, abort
 from flask_sqlalchemy import SQLAlchemy
 from config import Config
-from random import shuffle
+import random
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -11,10 +11,16 @@ from models import Deck, Card
 
 # Helper functions
 def get_deck(deck_id):
-    return Deck.query.get_or_404(deck_id)
+    deck = db.session.get(Deck, deck_id)
+    if deck is None:
+        abort(404)
+    return deck
 
 def get_card(card_id):
-    return Card.query.get_or_404(card_id)
+    card = db.session.get(Card, card_id)
+    if card is None:
+        abort(404)
+    return card
 
 def commit_and_redirect(endpoint, **values):
     db.session.commit()
@@ -88,31 +94,40 @@ def delete_card(deck_id, card_id):
 @app.route('/deck/<int:deck_id>/study', methods=['GET', 'POST'])
 def study_deck(deck_id):
     deck = get_deck(deck_id)
-    cards = list(deck.cards)
-
-    if not cards:
-        return render_template('study_complete.html', deck=deck)
-
-    shuffle_enabled = request.args.get('shuffle', 'false').lower() == 'true'
-
-    # Only shuffle if user has shuffle mode enabled
-    if shuffle_enabled:
-        shuffle(cards)
-
+    shuffle_toggle = request.args.get('shuffle', None)
     current_index = int(request.args.get('index', 0))
     show_back = request.args.get('show', 'false').lower() == 'true'
 
-    if current_index >= len(cards):
+    if 'study_order' not in session or session.get('deck_id') != deck_id:
+        order_ids = [card.id for card in deck.cards]
+        session['study_order'] = order_ids
+        session['deck_id'] = deck_id
+        session['shuffle_enabled'] = False
+
+    if shuffle_toggle is not None:
+        shuffle_enabled = shuffle_toggle.lower() == 'true'
+        if shuffle_enabled != session.get('shuffle_enabled', False):
+            order_ids = [card.id for card in deck.cards]
+            if shuffle_enabled:
+                random.shuffle(order_ids)
+            session['study_order'] = order_ids
+            session['shuffle_enabled'] = shuffle_enabled
+
+    order_ids = session['study_order']
+    shuffle_enabled = session.get('shuffle_enabled', False)
+
+    if current_index >= len(order_ids):
         return render_template('study_complete.html', deck=deck, shuffle_enabled=shuffle_enabled)
 
-    card = cards[current_index]
+    card_id = order_ids[current_index]
+    card = get_card(card_id)
 
     return render_template(
         'study.html',
         deck=deck,
         card=card,
         current_index=current_index,
-        total=len(cards),
+        total=len(order_ids),
         show_back=show_back,
         shuffle_enabled=shuffle_enabled
     )

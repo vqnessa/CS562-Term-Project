@@ -5,6 +5,7 @@
 </head>
 <body>
     <h1>Studying: {{ deck.name }}</h1>
+    <p>{{ current_index + 1 }} / {{ total }}</p>
 
     <div class="card">
         {% if show_back %}
@@ -31,11 +32,11 @@
     <div style="margin-top:20px;">
         {% if shuffle_enabled %}
         <a href="{{ url_for('study_deck', deck_id=deck.id, index=current_index, shuffle='false') }}">
-            <button>Shuffle</button>
+            <button>Shuffle: ON</button>
         </a>
         {% else %}
         <a href="{{ url_for('study_deck', deck_id=deck.id, index=current_index, shuffle='true') }}">
-            <button>Shuffle</button>
+            <button>Shuffle: OFF</button>
         </a>
         {% endif %}
     </div>
