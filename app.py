@@ -94,30 +94,43 @@ def delete_card(deck_id, card_id):
 @app.route('/deck/<int:deck_id>/study', methods=['GET', 'POST'])
 def study_deck(deck_id):
     deck = get_deck(deck_id)
-    shuffle_toggle = request.args.get('shuffle', None)
+
+    shuffle_toggle = request.args.get('shuffle')
     current_index = int(request.args.get('index', 0))
     show_back = request.args.get('show', 'false').lower() == 'true'
 
-    if 'study_order' not in session or session.get('deck_id') != deck_id:
-        order_ids = [card.id for card in deck.cards]
-        session['study_order'] = order_ids
+    current_card_ids = [card.id for card in deck.cards]
+
+    if session.get('deck_id') != deck_id:
         session['deck_id'] = deck_id
+        session['study_order'] = current_card_ids.copy()
+        session['original_ids'] = current_card_ids.copy()
         session['shuffle_enabled'] = False
 
+    if session.get('original_ids') != current_card_ids:
+        session['study_order'] = current_card_ids.copy()
+        session['original_ids'] = current_card_ids.copy()
+
+        if session.get('shuffle_enabled'):
+            random.shuffle(session['study_order'])
+
     if shuffle_toggle is not None:
-        shuffle_enabled = shuffle_toggle.lower() == 'true'
-        if shuffle_enabled != session.get('shuffle_enabled', False):
-            order_ids = [card.id for card in deck.cards]
-            if shuffle_enabled:
-                random.shuffle(order_ids)
-            session['study_order'] = order_ids
-            session['shuffle_enabled'] = shuffle_enabled
+        enable_shuffle = shuffle_toggle.lower() == 'true'
+        if enable_shuffle != session.get('shuffle_enabled'):
+            session['shuffle_enabled'] = enable_shuffle
+            session['study_order'] = current_card_ids.copy()
+            if enable_shuffle:
+                random.shuffle(session['study_order'])
 
     order_ids = session['study_order']
     shuffle_enabled = session.get('shuffle_enabled', False)
 
     if current_index >= len(order_ids):
-        return render_template('study_complete.html', deck=deck, shuffle_enabled=shuffle_enabled)
+        return render_template(
+            'study_complete.html',
+            deck=deck,
+            shuffle_enabled=shuffle_enabled
+        )
 
     card_id = order_ids[current_index]
     card = get_card(card_id)
