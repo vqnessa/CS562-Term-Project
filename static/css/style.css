@@ -1,0 +1,154 @@
+/* Overall configuration */
+* {
+    margin: auto;
+    padding: auto;
+    box-sizing: border-box;
+}
+
+/* Layout template */
+body {
+    font-family: "Inter", Arial, sans-serif;
+    background-color: rgb(242, 244, 247);
+    padding: 30px 0;
+    color: #333;
+}
+
+.container {
+    width: 90%;
+    max-width: 900px;
+    background: white;
+    margin: auto;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+h1, h2, h3 {
+    margin-bottom: 20px;
+    color: #222;
+}
+
+.controls {
+    display: flex;
+    justify-content: center;
+}
+
+.button,
+button {
+    background: rgb(91, 192, 255);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    display: inline-block;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    margin: 4px 2px;
+    transition: 0.2s ease;
+}
+
+.button:hover,
+button:hover {
+    background: rgb(58, 154, 214);
+    transform: translateY(-2px);
+}
+
+.shuffle-on {
+    background: rgb(76, 175, 80) !important;
+}
+
+.shuffle-off {
+    background: rgb(158, 158, 158) !important;
+}
+
+.shuffle-on:hover {
+    background: rgb(62, 142, 65) !important; /* darker green */
+}
+
+.shuffle-off:hover {
+    background: rgb(125, 125, 125) !important; /* darker gray */
+}
+
+input[type="text"],
+input[type="number"],
+textarea {
+    background: rgb(255, 255, 255);
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid rgb(187, 187, 187);
+    font-size: 15px;
+    margin: 10px 0 20px;
+}
+
+textarea {
+    height: 100px;
+}
+
+/* Card style, faces, and flip animation */
+.flashcard {
+    width: 100%;
+    max-width: 500px;
+    height: 250px;
+    margin: 20px auto;
+    perspective: 1000px;
+}
+
+.card-inner {
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+    position: relative;
+}
+
+.flip .card-inner {
+    transform: rotateY(180deg);
+}
+
+.card-front,
+.card-back {
+    background: rgb(250, 250, 250);
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    backface-visibility: hidden;
+    border-radius: 14px;
+    box-shadow: 0px 4px 14px rgba(0,0,0,0.08);
+    font-size: 22px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 25px;
+    text-align: center;
+}
+
+.card-back {
+    transform: rotateY(180deg);
+}
+
+.card-list li {
+    background: rgb(247, 247, 247);
+    padding: 12px 16px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+a {
+    color: rgb(91, 192, 255);
+    text-decoration: none;
+}
+
+a.create-deck {
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+a:hover {
+    text-decoration: underline;
+}

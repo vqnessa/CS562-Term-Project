@@ -1,8 +1,6 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Study Complete</title>
-</head>
+{% extends "layout.html" %}
+
+{% block content %}
 <body>
     {% if deck.cards|length > 0 %}
     <h2>Nice! You've studied all the terms in {{ deck.name }}.</h2>
@@ -20,4 +18,4 @@
     </p>
     {% endif %}
 </body>
-</html>
+{% endblock %}

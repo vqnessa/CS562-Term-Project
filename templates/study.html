@@ -1,26 +1,40 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Study: {{ deck.name }}</title>
-</head>
+{% extends "layout.html" %}
+
+{% block content %}
 <body>
     <h1>Studying: {{ deck.name }}</h1>
     <p>{{ current_index + 1 }} / {{ total }}</p>
 
-    <div class="card">
-        {% if show_back %}
-        {{ card.back_text }}
+    <div>
+        {% if shuffle_enabled %}
+        <a href="{{ url_for('study_deck', deck_id=deck.id, index=current_index, shuffle='false') }}">
+            <button class="shuffle-on">Shuffle: ON</button>
+        </a>
         {% else %}
-        {{ card.front_text }}
+        <a href="{{ url_for('study_deck', deck_id=deck.id, index=current_index, shuffle='true') }}">
+            <button class="shuffle-off">Shuffle: OFF</button>
+        </a>
         {% endif %}
     </div>
 
+    <div class="flashcard" id="flashcard">
+        <div class="card-inner">
+            <div class="card-front">
+                {{ card.front_text }}
+            </div>
+            <div class="card-back">
+                {{ card.back_text }}
+            </div>
+        </div>
+    </div>
+    
+    <script>
+    document.getElementById("flashcard").addEventListener("click", () => {
+        document.getElementById("flashcard").classList.toggle("flip");
+    });
+    </script>
+
     <div class="controls">
-        {% if not show_back %}
-        <a href="{{ url_for('study_deck', deck_id=deck.id, index=current_index, show='true', shuffle=shuffle_enabled) }}">
-            <button>Click to show answer</button>
-        </a>
-        {% endif %}
         <p>
         {% if current_index != 0 %}
             <a class="button" href="{{ url_for('study_deck', deck_id=deck.id, index=current_index - 1, shuffle=shuffle_enabled) }}">Previous Card</a>
@@ -29,20 +43,8 @@
         </p>
     </div>
 
-    <div style="margin-top:20px;">
-        {% if shuffle_enabled %}
-        <a href="{{ url_for('study_deck', deck_id=deck.id, index=current_index, shuffle='false') }}">
-            <button>Shuffle: ON</button>
-        </a>
-        {% else %}
-        <a href="{{ url_for('study_deck', deck_id=deck.id, index=current_index, shuffle='true') }}">
-            <button>Shuffle: OFF</button>
-        </a>
-        {% endif %}
-    </div>
-
     <p style="margin-top:15px;">
         <a href="{{ url_for('deck_detail', deck_id=deck.id) }}">Back to Deck</a>
     </p>
 </body>
-</html>
+{% endblock %}

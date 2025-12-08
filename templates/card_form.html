@@ -1,8 +1,6 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>{{ 'Edit' if card else 'New' }} Card</title>
-</head>
+{% extends "layout.html" %}
+
+{% block content %}
 <body>
     <h1>{{ 'Edit' if card else 'New' }} Card for "{{ deck.name }}"</h1>
     <form method="POST">
@@ -14,4 +12,4 @@
     </form>
     <a href="{{ url_for('deck_detail', deck_id=deck.id) }}">Back to Deck</a>
 </body>
-</html>
+{% endblock %}
