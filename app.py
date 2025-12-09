@@ -9,6 +9,9 @@ db = SQLAlchemy(app)
 
 from models import Deck, Card
 
+with app.app_context():
+    db.create_all()
+
 # Helper functions
 def get_deck(deck_id):
     deck = db.session.get(Deck, deck_id)
