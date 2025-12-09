@@ -3,7 +3,7 @@
 {% block content %}
 <body>
     <h1>Studying: {{ deck.name }}</h1>
-    <p>{{ current_index + 1 }} / {{ total }}</p>
+    <p>Cards: {{ current_index + 1 }} of {{ total }}</p>
 
     <div>
         {% if shuffle_enabled %}
